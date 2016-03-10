@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while :
+do
+  echo "Performing new stress testing cycle..."
+  stress --cpu 20 --io 20 --vm 6 --vm-bytes 25M --timeout 120s 
+  echo "Timeout..."
+  sleep 3
+done

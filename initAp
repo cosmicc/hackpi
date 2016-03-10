@@ -1,0 +1,16 @@
+#!/bin/bash
+
+iptables -P FORWARD ACCEPT
+
+# IP NAT AND FORWARDING
+iptables --table nat --append POSTROUTING --out-interface wlan2 -j MASQUERADE
+iptables --append FORWARD --in-interface wlan0 -j ACCEPT
+#iptables --append FORWARD --in-interface wlan0 --out-interface wlan2 -m state --state RELATED,ESTABLISHED -j ACCEPT
+#iptables --append FORWARD --in-interface wlan0 --out-interface wlan2 -j ACCEPT
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+dnsmasq
+hostapd -B /etc/hostapd/hostapd.conf
+
+#killall dnsmasq

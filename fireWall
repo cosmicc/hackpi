@@ -1,0 +1,40 @@
+#!/bin/bash
+
+BLOCK_IP="192.192.192.192"
+
+# FLUSH TABLES
+iptables --flush
+iptables --table nat --flush
+iptables --delete-chain
+iptables --table nat --delete-chain
+
+# SET DEFAULT POLICIES
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+
+# ALLOW ALL LOOPBACK
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# BLOCK IP
+iptables -A INPUT -s "$BLOCK_IP" -j DROP
+iptables -A FORWARD -d "$BLOCK_IP" -j DROP
+
+# BLOCK PUBLIC SSH
+iptables -A INPUT -p tcp -i wlan2 --dport 22 -j DROP
+
+# Allow INCOMING SSH WLAN0 ONLY
+iptables -A INPUT -p tcp -i wlan0 -s 172.23.10.0/24 -d 172.23.10.1 --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+# ALLOW INCOMING ESTABLISHED
+iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i wlan0 -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
+
+iptables -A INPUT -j DROP
+iptables -A OUTPUT -j ACCEPT
+

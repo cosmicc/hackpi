@@ -1,0 +1,3 @@
+killall wpa_supplicant
+wpa_supplicant -B -iwlan2 -c/root/HOME-010D-2.4.conf
+dhclient wlan2

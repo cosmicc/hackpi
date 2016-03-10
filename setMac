@@ -1,0 +1,44 @@
+#!/bin/bash
+
+r=$(( $RANDOM % 4 ));
+
+case $r in
+0)
+  vend="90:48:9A"
+  ;;
+1)
+  vend="00:71:CC"
+  ;;
+2)
+  vend="9C:D2:1E"
+  ;;
+3)
+  vend="A0:D3:C1"
+  ;;
+esac
+
+premac="$vend:11:22:33"
+
+ifconfig eth0 down
+#ifconfig wlan0 down
+#ifconfig wlan1 down
+ifconfig wlan2 down
+
+#macchanger -m $premac eth0
+#macchanger -ea eth0
+
+#macchanger -m $premac wlan0
+#macchanger -ea wlan0
+
+#macchanger -m $premac wlan1
+#macchanger -ea wlan1
+
+macchanger -m $premac wlan2
+macchanger -ea wlan2
+
+#ifconfig eth0 down
+#ifconfig wlan0 up
+#ifconfig wlan1 down
+ifconfig wlan2 up
+
+sleep 10
