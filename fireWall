@@ -8,6 +8,11 @@ iptables --table nat --flush
 iptables --delete-chain
 iptables --table nat --delete-chain
 
+#SET LOGGING CHAIN
+iptables -N DROPLOGGING
+iptables -N SSHLOGGING
+iptables -N BLOCKLOGGING
+
 # SET DEFAULT POLICIES
 iptables -P INPUT DROP
 iptables -P OUTPUT ACCEPT
@@ -17,15 +22,15 @@ iptables -P FORWARD DROP
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
+# Allow INCOMING SSH WLAN0 ONLY
+iptables -A INPUT -p tcp -i wlan0 -s 172.23.10.0/24 -d 172.23.10.1 --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -j SSHLOGGING
+
 # BLOCK IP
-iptables -A INPUT -s "$BLOCK_IP" -j DROP
-iptables -A FORWARD -d "$BLOCK_IP" -j DROP
+iptables -A INPUT -s "$BLOCK_IP" -j BLOCKLOGGING
+iptables -A FORWARD -d "$BLOCK_IP" -j BLOCKLOGGING
 
 # BLOCK PUBLIC SSH
-iptables -A INPUT -p tcp -i wlan2 --dport 22 -j DROP
-
-# Allow INCOMING SSH WLAN0 ONLY
-iptables -A INPUT -p tcp -i wlan0 -s 172.23.10.0/24 -d 172.23.10.1 --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp -i wlan2 --dport 22 -j DROPLOGGING
 
 # ALLOW INCOMING ESTABLISHED
 iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
@@ -35,6 +40,14 @@ iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 
-iptables -A INPUT -j DROP
+iptables -I INPUT -j DROPLOGGING
+
+iptables -A DROPLOGGING -m limit --limit 10/min -j LOG --log-prefix "DROP: " --log-level 7
+iptables -A DROPLOGGING -j DROP
+iptables -A BLOCKLOGGING -m limit --limit 10/min -j LOG --log-prefix "BLOCKED IP: " --log-level 7
+iptables -A BLOCKLOGGING -j DROP
+iptables -A SSHLOGGING -m limit --limit 10/min -j LOG --log-prefix "SSH: " --log-level 7
+iptables -A SSHLOGGING -j ACCEPT
+
 iptables -A OUTPUT -j ACCEPT
 
