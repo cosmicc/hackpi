@@ -1,0 +1,2 @@
+rkhunter --update
+rkhunter -c

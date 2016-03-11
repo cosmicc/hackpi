@@ -1,0 +1,1 @@
+chkconfig --list |grep '3:on'

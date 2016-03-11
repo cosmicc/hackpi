@@ -1,0 +1,17 @@
+#!/bin/bash
+
+hitemp=120
+lotemp=100
+
+tc=`cat /sys/devices/virtual/thermal/thermal_zone0/temp`
+ts=$(echo "scale=2;((9/5) * $tc) + 32" |bc)
+cs=`gpio read 6`
+tf=$(printf "%.0f\n" "$ts")
+if [[ $tf -gt $hitemp ]] && [[ $cs -eq 0 ]]
+ then
+  gpio write 6 1i
+fi
+if [[ $tf -lt $lotemp ]] && [[ $cs -eq 1 ]]
+ then
+  gpio write 6 0
+fi

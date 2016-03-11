@@ -1,0 +1,8 @@
+#!/bin/bash
+
+fping -u 8.8.8.8 >& /dev/null
+  if [ $? -ne 0 ]; then
+   gpio write 14 0
+  else
+   gpio write 14 1
+  fi

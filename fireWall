@@ -40,7 +40,7 @@ iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 
-iptables -I INPUT -j DROPLOGGING
+iptables -A INPUT -j DROPLOGGING
 
 iptables -A DROPLOGGING -m limit --limit 10/min -j LOG --log-prefix "DROP: " --log-level 7
 iptables -A DROPLOGGING -j DROP
