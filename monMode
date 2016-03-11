@@ -16,10 +16,13 @@ if [[ ! -d /sys/class/net/$1 ]] && [[ ! -d /sys/class/net/$1mon ]]
   exit 1
 fi
 
+echo " "
+echo "Switching $1 back to monitor mode..."
 ifconfig $1 down
 killall dhclient
 killall wpa_supplicant
 airmon-ng start $1
 sleep 3
 airodump-ng $1mon
-
+echo " "
+echo "Complete."

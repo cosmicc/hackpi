@@ -24,4 +24,5 @@ airmon-ng stop $1mon
 sleep 3
 ifconfig $1 down
 
-
+echo " "
+echo "Complete."

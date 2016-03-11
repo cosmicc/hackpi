@@ -1,3 +1,44 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] || [[ -z $1 ]]
+ then
+  echo " "
+  echo "*** ${0##*/} needs interface argument.  e.g. ${0##*/} wlan0"
+  echo " "
+  exit 1
+fi
+
+if [[ ! -d /sys/class/net/$1 ]] && [[ ! -d /sys/class/net/$1mon ]]
+ then
+  echo " "
+  echo "*** ${0##*/}: Interface $1 does not exist.  Please specify a valid interface."
+  echo " "
+  exit 1
+fi
+
+echo " "
+echo "Enabling Wifi connection on $1..."
+
+if [[ -d /sys/class/net/$1mon ]]
+ then
+  /opt/tools/hackpi/regMode $1
+fi
+sleep 3
+iptables -P FORWARD ACCEPT
+
+# IP NAT AND FORWARDING
+iptables --table nat --append POSTROUTING --out-interface wlan2 -j MASQUERADE
+iptables --append FORWARD --in-interface wlan0 -j ACCEPT
+#iptables --append FORWARD --in-interface wlan0 --out-interface wlan2 -m state --state RELATED,ESTABLISHED -j ACCEPT
+#iptables --append FORWARD --in-interface wlan0 --out-interface wlan2 -j ACCEPT
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+sleep 1
+
 killall wpa_supplicant
-wpa_supplicant -B -iwlan2 -c/root/HOME-010D-2.4.conf
-dhclient wlan2
+wpa_supplicant -B -i$1 -c/root/HOME-010D-2.4.conf
+sleep 3
+dhclient $1
+echo " "
+echo "Complete."
