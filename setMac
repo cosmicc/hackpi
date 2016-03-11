@@ -24,6 +24,8 @@ ifconfig eth0 down
 #ifconfig wlan1 down
 ifconfig wlan2 down
 
+sleep 3
+
 #macchanger -m $premac eth0
 #macchanger -ea eth0
 
@@ -34,11 +36,14 @@ ifconfig wlan2 down
 #macchanger -ea wlan1
 
 macchanger -m $premac wlan2
+sleep 1
 macchanger -ea wlan2
+
+sleep 2
 
 #ifconfig eth0 down
 #ifconfig wlan0 up
 #ifconfig wlan1 down
 ifconfig wlan2 up
 
-sleep 10
+sleep 3
