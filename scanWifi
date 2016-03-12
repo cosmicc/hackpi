@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] || [[ -z $1 ]]
+ then
+  echo " "
+  echo "*** ${0##*/} needs interface argument.  e.g. ${0##*/} wlan0"
+  echo " "
+  exit 1
+fi
+
+if [[ ! -d /sys/class/net/$1 ]] && [[ ! -d /sys/class/net/$1mon ]]
+ then
+  echo " "
+  echo "*** ${0##*/}: Interface $1 does not exist.  Please specify a valid interface."
+  echo " "
+  exit 1
+fi
+echo " "
+echo "Setting up Wifi scanning on $1..."
+/opt/tools/hackpi/monMode $1
+airodump-ng $1
