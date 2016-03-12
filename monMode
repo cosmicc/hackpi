@@ -23,6 +23,5 @@ killall dhclient
 killall wpa_supplicant
 airmon-ng start $1
 sleep 3
-airodump-ng $1mon
 echo " "
 echo "Complete."

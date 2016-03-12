@@ -15,7 +15,13 @@ if [[ ! -d /sys/class/net/$1 ]] && [[ ! -d /sys/class/net/$1mon ]]
   echo " "
   exit 1
 fi
+
 echo " "
 echo "Setting up Wifi scanning on $1..."
-/opt/tools/hackpi/monMode $1
-airodump-ng $1
+
+if [[ ! -d /sys/class/net/$1mon ]]
+ then
+ /opt/tools/hackpi/monMode $1
+fi
+
+airodump-ng $1mon

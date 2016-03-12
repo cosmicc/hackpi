@@ -5,8 +5,10 @@ echo 1 > /sys/class/gpio_sw/standby_led/data
 echo 0 > /sys/class/gpio_sw/normal_led/data
 modprobe -r gpio-sunxi
 
-gpio mode 14 out
-gpio mode 6 out
+gpio mode 14 out # checkNet Led
+gpio mode 6 out # Fan control
+gpio mode 12 in # hackWifi Switch detect
+gpio mode 10 out # hackWifi Led
 gpio write 14 0
 
 /usr/bin/nohup /usr/bin/watch -n30 /opt/tools/hackpi/exec30 &> /dev/null &
@@ -17,3 +19,8 @@ gpio write 14 0
 
 /etc/init.d/postgresql start
 
+swc=$(gpio read 12)
+if [[ $swc -eq 1 ]]
+ then
+  /usr/bin/python /opt/tools/hackpi/hackWifi.py
+fi

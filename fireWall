@@ -35,7 +35,7 @@ iptables -A INPUT -p tcp -i wlan2 --dport 22 -j DROPLOGGING
 # ALLOW INCOMING ESTABLISHED
 iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i wlan0 -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i wlan0 -s 172.23.10.0/24 -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
@@ -50,4 +50,4 @@ iptables -A SSHLOGGING -m limit --limit 10/min -j LOG --log-prefix "SSH: " --log
 iptables -A SSHLOGGING -j ACCEPT
 
 iptables -A OUTPUT -j ACCEPT
-
+iptables -A INPUT -j ACCEPT
