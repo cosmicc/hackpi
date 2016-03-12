@@ -1,14 +1,15 @@
 #!/bin/bash
 
+modprobe gpio-sunxi
+echo 1 > /sys/class/gpio_sw/standby_led/data
+echo 0 > /sys/class/gpio_sw/normal_led/data
+modprobe -r gpio-sunxi
+
 gpio mode 14 out
 gpio mode 6 out
 gpio write 14 0
 
-nohup watch -n30 /opt/tools/hackpi/exec30
-
-#modprobe gpio-sunxi
-#echo 0 > /sys/class/gpio_sw/standby_led/data
-#echo 0 > /sys/class/gpio_sw/normal_led/data
+/usr/bin/nohup /usr/bin/watch -n30 /opt/tools/hackpi/exec30 &> /dev/null &
 
 /opt/tools/hackpi/fireWall
 /opt/tools/hackpi/setMac

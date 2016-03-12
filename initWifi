@@ -41,4 +41,6 @@ wpa_supplicant -B -i$1 -c/root/HOME-010D-2.4.conf
 sleep 3
 dhclient $1
 echo " "
+sleep 3
+/opt/tools/hackpi/checkNet
 echo "Complete."
