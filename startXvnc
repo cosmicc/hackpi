@@ -4,4 +4,4 @@ killall Xtightvnc
 sleep 2
 rm /tmp/.X0-lock
 rm /tmp/.X11-unix/X0
-vncserver :0 -geometry 1366x768 -depth 24
+vncserver :1 -geometry 1366x768 -depth 24

@@ -1,0 +1,8 @@
+
+IN=`sudo cat /proc/net/wireless | grep wlan13`
+arr=$(echo $IN | tr " " ",")
+IFS=',' read -r -a sigline <<< "$arr"
+quality=${sigline[2]2%"."}
+strength=${sigline[3]2%"."}
+echo "94$quality+" > /dev/ttyUSB0
+echo "95$strength+" > /dev/ttyUSB0

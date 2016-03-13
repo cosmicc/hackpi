@@ -11,7 +11,7 @@ gpio mode 12 in # hackWifi Switch detect
 gpio mode 10 out # hackWifi Led
 gpio write 14 0
 
-/usr/bin/nohup /usr/bin/watch -n30 /opt/tools/hackpi/exec30 &> /dev/null &
+/usr/bin/nohup /usr/bin/watch -n5 /opt/tools/hackpi/exec30 &> /dev/null &
 
 /opt/tools/hackpi/fireWall
 /opt/tools/hackpi/setMac

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wifite -i wlan2mon --all &> /home/hackpi/wifite.log

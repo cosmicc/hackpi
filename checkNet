@@ -3,6 +3,8 @@
 fping -u 8.8.8.8 >& /dev/null
   if [ $? -ne 0 ]; then
    gpio write 14 0
+   echo "93+" > /dev/ttyUSB0
   else
    gpio write 14 1
+   echo "92+" > /dev/ttyUSB0
   fi

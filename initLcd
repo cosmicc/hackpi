@@ -1,0 +1,4 @@
+stty -F /dev/ttyUSB0 cs8 9600 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke -ixon -crtscts 
+echo "                                                    +" > /dev/ttyUSB0
+echo "95+" > /dev/ttyUSB0
+echo "91+" > /dev/ttyUSB0

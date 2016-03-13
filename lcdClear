@@ -1,0 +1,1 @@
+echo "95+" > /dev/ttyUSB0
