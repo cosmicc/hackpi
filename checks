@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/opt/tools/hackpi/fanControl
+/opt/tools/hackpi/checkNet
+/opt/tools/hackpi/wifiSignal

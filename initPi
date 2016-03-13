@@ -1,17 +1,16 @@
 #!/bin/bash
 
+# Switch Power Led off and Status (green) led on
 modprobe gpio-sunxi
 echo 1 > /sys/class/gpio_sw/standby_led/data
 echo 0 > /sys/class/gpio_sw/normal_led/data
 modprobe -r gpio-sunxi
 
-gpio mode 14 out # checkNet Led
 gpio mode 6 out # Fan control
-gpio mode 12 in # hackWifi Switch detect
-gpio mode 10 out # hackWifi Led
+gpio mode 10 in # hackWifi Switch detect
 gpio write 14 0
 
-/usr/bin/nohup /usr/bin/watch -n5 /opt/tools/hackpi/exec30 &> /dev/null &
+/usr/bin/watch -n5 /opt/tools/hackpi/checks &> /dev/null &
 
 /opt/tools/hackpi/fireWall
 /opt/tools/hackpi/setMac
