@@ -1,5 +1,80 @@
 #!/bin/bash
 
-/opt/tools/hackpi/fanControl
-/opt/tools/hackpi/checkNet
-/opt/tools/hackpi/wifiSignal
+while true
+do
+
+### Fan Control
+
+hitemp=120
+lotemp=100
+
+tc=`cat /sys/devices/virtual/thermal/thermal_zone0/temp`
+ts=$(echo "scale=2;((9/5) * $tc) + 32" |bc)
+cs=`gpio read 6`
+tf=$(printf "%.0f\n" "$ts")
+echo "97$tf+" > /dev/ttyUSB0
+if [[ $tf -gt $hitemp ]] && [[ $cs -eq 0 ]]
+ then
+  gpio write 6 1i
+fi
+if [[ $tf -lt $lotemp ]] && [[ $cs -eq 1 ]]
+ then
+  gpio write 6 0
+fi
+
+### AP Check
+
+swc=$(gpio read 12)
+if [[ $swc -eq 1 ]]
+ then
+   if ! (pgrep hostapd)
+     then
+     /opt/tools/hackpi/initAp
+   fi
+fi
+if [[ $swc -eq 0 ]]
+ then
+   if (pgrep hostapd)
+      then
+      killall hostapd
+   fi
+fi
+
+   if ! (pgrep hostapd)
+     then
+     echo "70+" > /dev/ttyUSB0
+   else
+     echo "71+" > /dev/ttyUSB0
+   fi
+
+### Internet Check
+
+fping -u 8.8.8.8 >& /dev/null
+  if [ $? -ne 0 ]; then
+   gpio write 14 0
+   echo "93+" > /dev/ttyUSB0
+  else
+   gpio write 14 1
+   echo "92+" > /dev/ttyUSB0
+  fi
+
+### System Stats
+
+CPU=`mpstat 1 1 | awk '$3 ~ /CPU/ { for(i=1;i<=NF;i++) { if ($i ~ /%idle/)field=i } } $3 ~ /all/ { printf("%d",100 - $field) }'`
+echo "96$CPU+" > /dev/ttyUSB0
+MEM=`free -t | grep "buffers/cache" | awk '{print $4/($3+$4) * 100}'`
+MEM=$(printf %.0f $MEM)
+echo "98$MEM+" > /dev/ttyUSB0
+
+### Wifi Signal
+
+IN=`sudo cat /proc/net/wireless | grep wlan2`
+arr=$(echo $IN | tr " " ",")
+IFS=',' read -r -a sigline <<< "$arr"
+quality=${sigline[2]2%"."}
+strength=${sigline[3]2%"."}
+echo "94$quality+" > /dev/ttyUSB0
+echo "95$strength+" > /dev/ttyUSB0
+
+sleep 5
+done

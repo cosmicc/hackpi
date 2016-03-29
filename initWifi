@@ -37,7 +37,6 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 sleep 1
 
 killall wpa_supplicant
-echo "31HOME-010D-2.4+" > /dev/ttyUSB0
 wpa_supplicant -B -i$1 -c/root/HOME-010D-2.4.conf
 sleep 3
 dhclient $1
