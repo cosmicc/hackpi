@@ -1,5 +1,11 @@
 #!/bin/bash
 
+echo "99+" > /dev/ttyUSB0
+echo "99+" > /dev/ttyUSB0
+echo "99+" > /dev/ttyUSB0
+echo "91+" > /dev/ttyUSB0
+
+
 while true
 do
 
@@ -15,7 +21,7 @@ tf=$(printf "%.0f\n" "$ts")
 echo "97$tf+" > /dev/ttyUSB0
 if [[ $tf -gt $hitemp ]] && [[ $cs -eq 0 ]]
  then
-  gpio write 6 1i
+  gpio write 6 1
 fi
 if [[ $tf -lt $lotemp ]] && [[ $cs -eq 1 ]]
  then
@@ -24,15 +30,15 @@ fi
 
 ### AP Check
 
-swc=$(gpio read 12)
-if [[ $swc -eq 1 ]]
+swc=`gpio read 12`
+if [[ $swc -eq 0 ]]
  then
    if ! (pgrep hostapd)
      then
      /opt/tools/hackpi/initAp
    fi
 fi
-if [[ $swc -eq 0 ]]
+if [[ $swc -eq 1 ]]
  then
    if (pgrep hostapd)
       then
@@ -75,6 +81,35 @@ quality=${sigline[2]2%"."}
 strength=${sigline[3]2%"."}
 echo "94$quality+" > /dev/ttyUSB0
 echo "95$strength+" > /dev/ttyUSB0
+
+### Station Count
+
+sta=`arp | grep wlan0`
+scnt=`wc -l <<< "$sta"`
+if [[ $sta == "" ]]
+then
+scnt=0
+fi
+echo "75$scnt+" > /dev/ttyUSB0
+
+## Connected Shell users count
+
+csu=$(who | sort -uk1,1 | wc -l)
+echo "74$csu+" > /dev/ttyUSB0
+
+## Connected SSID 
+
+ssid=`iwconfig 2> /dev/null | grep wlan2 | sed -n 's/:/&\n/;s/.*\n//p' | tr -d '"'`
+echo "76$ssid+" > /dev/ttyUSB0
+
+## Wifite check
+
+if (pgrep wifite)
+then
+  echo "73+" > /dev/ttyUSB0
+else
+  echo "72+" > /dev/ttyUSB0
+fi
 
 sleep 5
 done

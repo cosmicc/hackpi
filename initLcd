@@ -1,7 +1,19 @@
+stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke -ixon -crtscts
+
+screen -d -m minicom -D /dev/ttyUSB0 
+#sleep 3
+#killall minicom
+
 #stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke -ixon -crtscts 
-stty -F /dev/ttyUSB0 cs8 115200 -ixon -ixoff -crtscts -clocal 
-echo "                                                                        +" > /dev/ttyUSB0
-echo " " > /dev/ttyUSB0
+
+#stty -F /dev/ttyUSB0 cs8 115200 -ixon -ixoff -crtscts -clocal -parodd -parenb -inpck -icanon -iexten -isig -parmrk
+
+sleep 3
+echo "                               +" > /dev/ttyUSB0
+echo "                               +" > /dev/ttyUSB0
+echo "                               +" > /dev/ttyUSB0
 echo "99+" > /dev/ttyUSB0
 echo "99+" > /dev/ttyUSB0
-echo "91+" > /dev/ttyUSB0
+echo "99+" > /dev/ttyUSB0
+echo "99+" > /dev/ttyUSB0
+echo "99+" > /dev/ttyUSB0

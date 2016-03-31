@@ -16,10 +16,10 @@ gpio mode 12 in # initAp Switch detect
 
 /etc/init.d/postgresql start
 
-swc=$(gpio read 12)
-if [[ $swc -eq 1 ]]
+swc=`gpio read 12`
+if [[ $swc -eq 0 ]]
  then
   /opt/tools/hackpi/initAp
 fi
 
-/usr/bin/nohup /opt/tools/hackpi/checkloop &
+/usr/bin/nohup /opt/tools/hackpi/checks &> /dev/null &

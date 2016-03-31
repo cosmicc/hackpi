@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sta=`w`
+str=`echo $sta | awk '{ if ( NR > 2  ) { print } }'`
+echo $sta
+

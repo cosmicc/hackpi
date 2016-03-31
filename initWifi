@@ -42,5 +42,4 @@ sleep 3
 dhclient $1
 echo " "
 sleep 3
-/opt/tools/hackpi/checkNet
 echo "Complete."
